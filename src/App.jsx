@@ -1,4 +1,4 @@
-import HomePage from "./pages/HomePage"
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import "bootstrap/dist/css/bootstrap.min.css"
 import { GlobalContextProvider } from "./contexts/GlobalContext"
 import NavBar from "./components/NavBar"

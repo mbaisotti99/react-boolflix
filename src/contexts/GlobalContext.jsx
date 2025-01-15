@@ -6,10 +6,13 @@ const GlobalContext = createContext()
 
 const GlobalContextProvider = ({children}) =>{
     const [moviesArr, setMoviesArr] = useState([])
+    const [tvArr, setTvArr] = useState([])
     
     const contextValue = {
         moviesArr,
-        setMoviesArr
+        setMoviesArr,
+        tvArr,
+        setTvArr
     }
 
     return(
