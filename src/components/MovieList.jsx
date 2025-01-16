@@ -9,7 +9,7 @@ function MovieList() {
     const { moviesArr, tvArr } = useGlobalContext()
     const completeArr = [...moviesArr, ...tvArr]
     const [genreList, setGenreList] = useState([])
-    const [selectedGen, setSelectedGen] = useState([...genreList])
+    const [selectedGen, setSelectedGen] = useState(null)
     const [arrayByGen, setArrayByGen] = useState([...completeArr])
 
     const handleChange = (event) =>{
@@ -21,9 +21,11 @@ function MovieList() {
     useEffect(() =>{
         setArrayByGen(
             completeArr.filter((curMovie) =>{
-                console.log(curMovie.genre_ids);
+                console.log(curMovie.genre_ids); //Array di Generi del movie corrente
+                console.log(selectedGen); //ID Genere Selezionato
+                console.log(curMovie.genre_ids.includes(parseInt(selectedGen)));
                 
-                return(curMovie.genre_ids.includes(selectedGen))
+                return(curMovie.genre_ids.includes(parseInt(selectedGen)))
             }
             )
         )
@@ -36,20 +38,11 @@ function MovieList() {
             .get("https://api.themoviedb.org/3/genre/movie/list", { params: { api_key: "9d5235dee5556b95d050a5c00ecfc6fc" } })
             .then((resp) => {
                 setGenreList(resp.data.genres)
-                console.log(genreList);
+                // console.log(genreList);
             }
             )
     }, [])
 
-    // useEffect(() => {
-    //     if (moviesArr.length > 0) {
-    //         console.log((Array.from({ length: Math.ceil(moviesArr[0].vote_average) })).map(() => {
-    //             return (
-    //                 <i class="fa-regular fa-star"></i>
-    //             )
-    //         }))
-    //     }
-    // }, [moviesArr])
     return (
         <>
             <div className="container d-flex flex-wrap">
@@ -61,11 +54,8 @@ function MovieList() {
                         )
                     })}
                 </select>
-                {completeArr.map((curMovie) => {
-                    // let stars = ""
-                    // for (let i = 0; i < Math.ceil(curMovie.vote_average); i++) {
-                    //     stars += <i class="fa-regular fa-star"></i>
-                    // }
+                {arrayByGen.map((curMovie) => {
+
                     return (
 
                         curMovie.title ?
