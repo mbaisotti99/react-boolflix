@@ -14,12 +14,13 @@ function MovieList() {
 
     const handleChange = (event) =>{
         setSelectedGen(event.target.value)
-        // console.log(selectedGen);
         
     }
-
+    
     useEffect(() =>{
+        console.log(selectedGen);
         setArrayByGen(
+            selectedGen !== "all" ? 
             completeArr.filter((curMovie) =>{
                 console.log(curMovie.genre_ids); //Array di Generi del movie corrente
                 console.log(selectedGen); //ID Genere Selezionato
@@ -28,6 +29,8 @@ function MovieList() {
                 return(curMovie.genre_ids.includes(parseInt(selectedGen)))
             }
             )
+            :
+            [...completeArr]
         )
         console.log(arrayByGen);
         
@@ -46,8 +49,8 @@ function MovieList() {
     return (
         <>
             <div className="container d-flex flex-wrap">
-                <select class="form-select" onChange={handleChange}>
-                    <option selected>Tutti</option>
+                <select class="form-select my-5" onChange={handleChange}>
+                    <option selected value={"all"}>Tutti</option>
                     {genreList.map((curGen) =>{
                         return(
                             <option value={curGen.id}>{curGen.name}</option>
