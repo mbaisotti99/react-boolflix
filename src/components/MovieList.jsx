@@ -1,24 +1,66 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useGlobalContext } from "../contexts/GlobalContext"
 import '@fortawesome/fontawesome-free/css/all.css';
+import axios from "axios";
 
 
 function MovieList() {
 
     const { moviesArr, tvArr } = useGlobalContext()
     const completeArr = [...moviesArr, ...tvArr]
+    const [genreList, setGenreList] = useState([])
+    const [selectedGen, setSelectedGen] = useState([...genreList])
+    const [arrayByGen, setArrayByGen] = useState([...completeArr])
+
+    const handleChange = (event) =>{
+        setSelectedGen(event.target.value)
+        // console.log(selectedGen);
+        
+    }
+
+    useEffect(() =>{
+        setArrayByGen(
+            completeArr.filter((curMovie) =>{
+                console.log(curMovie.genre_ids);
+                
+                return(curMovie.genre_ids.includes(selectedGen))
+            }
+            )
+        )
+        console.log(arrayByGen);
+        
+    },[selectedGen])
+
     useEffect(() => {
-        if (moviesArr.length > 0) {
-            console.log((Array.from({ length: Math.ceil(moviesArr[0].vote_average) })).map(() => {
-                return (
-                    <i class="fa-regular fa-star"></i>
-                )
-            }))
-        }
-    }, [moviesArr])
+        axios
+            .get("https://api.themoviedb.org/3/genre/movie/list", { params: { api_key: "9d5235dee5556b95d050a5c00ecfc6fc" } })
+            .then((resp) => {
+                setGenreList(resp.data.genres)
+                console.log(genreList);
+            }
+            )
+    }, [])
+
+    // useEffect(() => {
+    //     if (moviesArr.length > 0) {
+    //         console.log((Array.from({ length: Math.ceil(moviesArr[0].vote_average) })).map(() => {
+    //             return (
+    //                 <i class="fa-regular fa-star"></i>
+    //             )
+    //         }))
+    //     }
+    // }, [moviesArr])
     return (
         <>
             <div className="container d-flex flex-wrap">
+                <select class="form-select" onChange={handleChange}>
+                    <option selected>Tutti</option>
+                    {genreList.map((curGen) =>{
+                        return(
+                            <option value={curGen.id}>{curGen.name}</option>
+                        )
+                    })}
+                </select>
                 {completeArr.map((curMovie) => {
                     // let stars = ""
                     // for (let i = 0; i < Math.ceil(curMovie.vote_average); i++) {
@@ -43,7 +85,7 @@ function MovieList() {
                                         "N/A"
                                     } </p>
                                     <p className="card-text"> {curMovie.overview} </p>
-                                    
+
                                 </div>
                             </div>
 
